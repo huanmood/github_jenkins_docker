@@ -11,19 +11,13 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                // Jenkins 自己拉最新代码
-                git branch: 'main', url: 'https://github.com/huanmood/huan.git'
-            }
-        }
-
+ 
         stage('Copy Code to Linux & Build Docker') {
             steps {
              bat """
 	ssh -i "%SSH_KEY%" %REMOTE_USER%@%REMOTE_HOST% "mkdir -p %REMOTE_DIR%"
 	scp -r -i "%SSH_KEY%" * %REMOTE_USER%@%REMOTE_HOST%:%REMOTE_DIR%
-	ssh -i "%SSH_KEY%" %REMOTE_USER%@%REMOTE_HOST% "cd %REMOTE_DIR% && docker build -t %IMAGE_NAME%:latest ."
+	ssh -i "%SSH_KEY%" %REMOTE_USER%@%REMOTE_HOST% "cd %REMOTE_DIR% && docker build -t 	github_jenkins_docker:latest ."
 	"""
             }
         }
