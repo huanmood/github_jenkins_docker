@@ -21,7 +21,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 bat '''
-                    ssh -i "C:\\Users\\YZY\\.ssh\\id_rsa" root@10.103.196.119 "docker stop simple_app 2>/dev/null || true && docker rm simple_app 2>/dev/null || true && docker run -d --name simple_app -p 5000:5000 simple_app:latest"
+                    ssh -i "C:\\Users\\YZY\\.ssh\\id_rsa" root@10.103.196.119 "docker stop simple_app 2>/dev/null || true && docker rm simple_app 2>/dev/null || true && docker run --rm -d  --name simple_app -p 5000:5000 simple_app:latest"
                 '''
             }
         }
