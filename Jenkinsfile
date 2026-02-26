@@ -5,12 +5,14 @@ pipeline {
         REMOTE_USER = "root"
         REMOTE_HOST = "10.103.196.119"
         REMOTE_DIR  = "/root/jenkins_build"
-        IMAGE_NAME  = "simple_app"
+        SSH_KEY     = "C:\\Users\\YZY\\.ssh\\id_rsa"
+        IMAGE_NAME  = "simple_app:latest"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
+                // 拉取最新代码
                 git url: 'https://github.com/huanmood/github_jenkins_docker.git', branch: 'main'
             }
         }
@@ -18,10 +20,9 @@ pipeline {
         stage('Copy Code to Linux & Build Docker') {
             steps {
                 bat """
-                ssh -i "C:\\Users\\YZY\\.ssh\\id_rsa" %REMOTE_USER%@%REMOTE_HOST% "mkdir -p %REMOTE_DIR%"
-                scp -r -i "C:\\Users\\YZY\\.ssh\\id_rsa" * %REMOTE_USER%@%REMOTE_HOST%:%REMOTE_DIR%
-                ssh -i "C:\\Users\\YZY\\.ssh\\id_rsa" %REMOTE_USER%@%REMOTE_HOST% " cd %REMOTE_DIR% && docker build -t %IMAGE_NAME%:latest .
-                "
+                ssh -i "${SSH_KEY}" ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${REMOTE_DIR}"
+                scp -r -i "${SSH_KEY}" * ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
+                ssh -i "${SSH_KEY}" ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_DIR} && docker build -t ${IMAGE_NAME} ."
                 """
             }
         }
@@ -29,10 +30,10 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 bat """
-                ssh -i "C:\\Users\\YZY\\.ssh\\id_rsa" %REMOTE_USER%@%REMOTE_HOST% "
-                    docker stop %IMAGE_NAME% || true &&
-                    docker rm %IMAGE_NAME% || true &&
-                    docker run -d --name %IMAGE_NAME% -p 8080:8080 %IMAGE_NAME%:latest
+                ssh -i "${SSH_KEY}" ${REMOTE_USER}@${REMOTE_HOST} "
+                    docker stop simple_app || true &&
+                    docker rm simple_app || true &&
+                    docker run -d --name simple_app -p 5000:5000 ${IMAGE_NAME}
                 "
                 """
             }

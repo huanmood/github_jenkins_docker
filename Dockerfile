@@ -1,19 +1,17 @@
-# Dockerfile
-
 # 使用官方 Python 3.11 slim 镜像
-FROM python:3.11-slim
+FROM python:3.11.10-slim
 
 # 设置工作目录
 WORKDIR /app
 
-# 拷贝代码
-COPY . /app
+# 复制代码到容器
+COPY web.py /app/
 
-# 安装依赖
+# 安装 Flask
 RUN pip install --no-cache-dir flask
 
 # 暴露端口
-EXPOSE 8080
+EXPOSE 5000
 
-# 容器启动命令
+# 启动服务
 CMD ["python", "web.py"]
