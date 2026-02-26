@@ -1,19 +1,11 @@
-import logging
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+# web.py
+from flask import Flask, jsonify
 
-chrome_options = Options()
-chrome_options.add_argument("--headless=new")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--window-size=1920,1080")
+app = Flask(__name__)
 
-service = Service("/usr/bin/chromedriver")
+@app.route("/ping")
+def ping():
+    return jsonify({"message": "pong"})
 
-driver = webdriver.Chrome(service=service, options=chrome_options)
-
-driver.get("https://www.google.com")
-print("标题:", driver.title)
-
-driver.quit()
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
