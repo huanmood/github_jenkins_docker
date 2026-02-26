@@ -1,6 +1,8 @@
 FROM python:3.10-slim
 
-# 安装依赖
+# 替换为清华 Debian 镜像源
+RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \
