@@ -30,11 +30,10 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 bat """
-                ssh -i "${SSH_KEY}" ${REMOTE_USER}@${REMOTE_HOST} "
-                    docker stop simple_app || true &&
-                    docker rm simple_app || true &&
-                    docker run -d --name simple_app -p 5000:5000 ${IMAGE_NAME}
-                "
+                ssh -i "${SSH_KEY}" ${REMOTE_USER}@${REMOTE_HOST} ^
+                    "docker stop simple_app 2>nul
+                    docker rm simple_app 2>nul
+                    docker run -d --name simple_app -p 5000:5000 ${IMAGE_NAME}"
                 """
             }
         }
